@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     
     // Set shared memory (pass NULL as last argument with shared memory size)
     int shared_mem_size = block_size * sizeof(int);
-    iris_kernel_setarg(kernel, 2, shared_mem_size, NULL);
+    iris_kernel_setsmem(kernel, 2, shared_mem_size);
     
     // Create task
     iris_task task;

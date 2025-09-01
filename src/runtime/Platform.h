@@ -84,6 +84,7 @@ public:
   int KernelCreate(const char* name, iris_kernel* brs_kernel);
   int KernelGet(const char* name, iris_kernel* brs_kernel);
   int KernelSetArg(iris_kernel brs_kernel, int idx, size_t size, void* value);
+  int KernelSharedMem(iris_kernel brs_kernel, int idx, size_t size);
   int KernelSetMem(iris_kernel brs_kernel, int idx, iris_mem mem, size_t off, size_t mode);
   int KernelSetMap(iris_kernel brs_kernel, int idx, void* host, size_t mode);
   int KernelRelease(iris_kernel brs_kernel);

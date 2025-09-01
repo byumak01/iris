@@ -26,6 +26,7 @@ typedef struct _KernelArg {
   size_t mem_size;
   size_t off;
   int mode;
+  bool is_shared = false;
 } KernelArg;
 
 class Kernel: public Retainable<struct _iris_kernel, Kernel> {
@@ -34,6 +35,7 @@ public:
   virtual ~Kernel();
 
   int SetArg(int idx, size_t size, void* value);
+  int SetSharedMem(int idx, size_t size);
   int SetMem(int idx, BaseMem* mem, size_t off, int mode);
   KernelArg* ExportArgs();
   void* GetParamWrapperMemory() { return (void *)param_wrapper_mem_; }

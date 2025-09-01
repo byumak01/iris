@@ -360,6 +360,15 @@ extern int iris_kernel_get(const char* name, iris_kernel* kernel);
  */
 extern int iris_kernel_setarg(iris_kernel kernel, int idx, size_t size, void* value);
 
+/**@brief Allocates shared memory for kernel.
+ *
+ * @param kernel a kernel object
+ * @param idx index of the parameter
+ * @param size size of the argument
+ * @return This function returns an integer indicating IRIS_SUCCESS or IRIS_ERROR .
+ */
+extern int iris_kernel_setsmem(iris_kernel kernel, int idx, size_t size);
+
 
 /**@brief Sets memory object as an arguments for a given kernel
  *

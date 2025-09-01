@@ -50,15 +50,26 @@ int Kernel::set_order(int *order) {
 
 int Kernel::SetArg(int idx, size_t size, void* value) {
   std::cout << "-----------------------" << std::endl;
-  std::cout << "kernel.cpp:setarg called " << std::endl;
-  std::cout << "idx: " << idx << std::endl;
-  std::cout << "size: " << size << std::endl;
-  std::cout << "value: " << value << std::endl;
+  std::cout << "kernel.cpp:setarg without shared mem logic called " << std::endl;
   KernelArg* arg = new KernelArg;
   arg->size = size;
   if (value) memcpy(arg->value, value, size);
   arg->mem = NULL;
   arg->off = 0ULL;
+  args_[idx] = arg;
+  return IRIS_SUCCESS;
+}
+
+int Kernel::SetSharedMem(int idx, size_t size) {
+  std::cout << "-----------------------" << std::endl;
+  std::cout << "kernel.cpp:setarg with shared mem logic called " << std::endl;
+  std::cout << "idx: " << idx << std::endl;
+  std::cout << "size: " << size << std::endl;
+  KernelArg* arg = new KernelArg;
+  arg->size = size;
+  arg->mem = NULL;
+  arg->off = 0ULL;
+  arg->is_shared = true;
   args_[idx] = arg;
   std::cout << "arg->value: " << arg->value << std::endl;
   return IRIS_SUCCESS;
