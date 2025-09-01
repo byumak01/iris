@@ -1,0 +1,71 @@
+# Makefile for IRIS KNN implementation
+include ../makefile_defs.mk
+
+# Target executables
+all: iris_knn kernel.ptx kernel.spv kernel.hip kernel.openmp.so
+
+# Main executable
+iris_knn: iris_knn_main.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+# CUDA kernel compilation to PTX
+kernel.ptx: knn_kernels.cu
+	$(NVCC) -ptx $^
+
+# OpenCL kernel compilation to SPIR-V
+kernel.spv: knn_kernels.cl
+	clang -cc1 -finclude-default-header -triple spir $^ -O0 -flto -emit-llvm-bc -o kernel.bc
+	llvm-spirv kernel.bc -o $@
+
+# HIP kernel compilation
+kernel.hip: knn_kernels.hip
+	$(HIPCC) --genco -o $@ $^
+
+# OpenMP kernel compilation
+kernel.openmp.so: knn_kernels.openmp.c
+	$(CC) $(CFLAGS) -O3 -fopenmp -fPIC -shared -I. -o $@ $^
+
+# Hexagon kernel compilation (if needed)
+kernel.hexagon.so: knn_kernels.hexagon.c
+	$(CC) $(CFLAGS) -g -fPIC -shared -I. -o $@ $^
+
+# Polyhedral kernel compilation (if needed)  
+kernel.poly.so: knn_kernels.poly.c
+	$(CC) $(CFLAGS) -g -fPIC -shared -I. -o $@ $^
+
+# Debug build
+debug: CXXFLAGS += -DDEBUG -g
+debug: iris_knn
+
+# Test run
+test: iris_knn
+	./iris_knn 10
+
+# Clean build artifacts
+clean:
+	rm -f iris_knn kernel.ptx kernel.spv kernel.hip kernel.openmp.so kernel.hexagon.so kernel.poly.so kernel.bc
+	rm -f *.o
+
+# Install (copy to system location)
+install: iris_knn
+	install -d $(DESTDIR)/usr/local/bin
+	install -m 755 iris_knn $(DESTDIR)/usr/local/bin
+
+# Help
+help:
+	@echo "Available targets:"
+	@echo "  all      - Build the main executable and all kernel formats"
+	@echo "  iris_knn - Build the main executable only"
+	@echo "  debug    - Build with debug symbols"
+	@echo "  test     - Run a test with 10 iterations"
+	@echo "  clean    - Remove build artifacts"
+	@echo "  install  - Install to system location"
+	@echo "  help     - Show this help message"
+	@echo ""
+	@echo "Kernel targets:"
+	@echo "  kernel.ptx       - CUDA PTX kernel"
+	@echo "  kernel.spv       - OpenCL SPIR-V kernel"
+	@echo "  kernel.hip       - HIP kernel"
+	@echo "  kernel.openmp.so - OpenMP shared library"
+
+.PHONY: all debug test clean install help

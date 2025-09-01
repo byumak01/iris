@@ -512,19 +512,30 @@ int DeviceCUDA::KernelGet(Kernel *kernel, void** kernel_bin, const char* name, b
 }
 
 int DeviceCUDA::KernelSetArg(Kernel* kernel, int idx, int kindex, size_t size, void* value) {
+  std::cout << "-----------------------" << std::endl;
+  std::cout << "device.cpp:kernelsetarg called " << std::endl;
+  std::cout << "idx: " << idx << std::endl;
+  std::cout << "kindex: " << kindex << std::endl;
+  std::cout << "size: " << size << std::endl;
+  std::cout << "value: " << value << std::endl;
   if (value) params_[idx] = value;
   else {
+    std::cout << "shared mem condition" << std::endl;
     shared_mem_offs_[idx] = shared_mem_bytes_;
     params_[idx] = shared_mem_offs_ + idx;
     shared_mem_bytes_ += size;
   }
   if (max_arg_idx_ < idx) max_arg_idx_ = idx;
   if (kernel->is_vendor_specific_kernel(devno_)) {
-     if (host2cuda_ld_->iris_host2cuda_setarg_with_obj)
+     std::cout << "first if statement" << std::endl;
+     if (host2cuda_ld_->iris_host2cuda_setarg_with_obj){
          host2cuda_ld_->iris_host2cuda_setarg_with_obj(
                 kernel->GetParamWrapperMemory(), kindex, size, value);
-     else if (host2cuda_ld_->iris_host2cuda_setarg)
+                std::cout << "second if statement" << std::endl;}
+     else if (host2cuda_ld_->iris_host2cuda_setarg){
          host2cuda_ld_->iris_host2cuda_setarg(kindex, size, value);
+         std::cout << "third if statement" << std::endl;
+        }
   }
   return IRIS_SUCCESS;
 }
@@ -638,6 +649,7 @@ int DeviceCUDA::KernelLaunch(Kernel* kernel, int dim, size_t* off, size_t* gws, 
     }
   }
   _trace("dev[%d][%s] kernel[%s:%s] dim[%d] grid[%d,%d,%d] block[%d,%d,%d] blockoff[%lu,%lu,%lu] max_arg_idx[%d] shared_mem_bytes[%u] q[%d]", devno_, name_, kernel->name(), kernel->get_task_name(), dim, grid[0], grid[1], grid[2], block[0], block[1], block[2], blockOff_x, blockOff_y, blockOff_z, max_arg_idx_, shared_mem_bytes_, q_);
+  std::cout << "shared_mem_bytes_: " << shared_mem_bytes_ << std::endl;
 #ifdef IRIS_SYNC_EXECUTION
   err_ = ld_->cuLaunchKernel(cukernel, grid[0], grid[1], grid[2], block[0], block[1], block[2], shared_mem_bytes_, 0, params_, NULL);
   err_ = ld_->cuStreamSynchronize(0);

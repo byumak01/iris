@@ -6,6 +6,7 @@
 #include "DataMem.h"
 #include "DataMemRegion.h"
 #include <string.h>
+#include <iostream>
 
 using namespace std;
 namespace iris {
@@ -48,12 +49,18 @@ int Kernel::set_order(int *order) {
 }
 
 int Kernel::SetArg(int idx, size_t size, void* value) {
+  std::cout << "-----------------------" << std::endl;
+  std::cout << "kernel.cpp:setarg called " << std::endl;
+  std::cout << "idx: " << idx << std::endl;
+  std::cout << "size: " << size << std::endl;
+  std::cout << "value: " << value << std::endl;
   KernelArg* arg = new KernelArg;
   arg->size = size;
   if (value) memcpy(arg->value, value, size);
   arg->mem = NULL;
   arg->off = 0ULL;
   args_[idx] = arg;
+  std::cout << "arg->value: " << arg->value << std::endl;
   return IRIS_SUCCESS;
 }
 

@@ -198,7 +198,14 @@ void Device::ExecuteKernel(Command* cmd) {
         KernelSetMem(kernel, arg_idx, idx, (DataMem *)bmem, arg->off); arg_idx+=1; 
         //set_mem_time += timer_->GetCurrentTime() - set_mem_time_start;
         mem_idx++;
-    } else { KernelSetArg(kernel, arg_idx, idx, arg->size, arg->value); arg_idx+=1; }
+    } else { std::cout << "else cond" << std::endl; 
+        std::cout << "else cond arg->value" << arg->value << std::endl;
+        std::cout << "lws[0]: " << lws[0] << std::endl;
+        std::cout << "gws[0]: " << gws[0] << std::endl;
+        KernelSetArg(kernel, arg_idx, idx, arg->size, NULL);
+        arg_idx+=1;
+      //KernelSetArg(kernel, arg_idx, idx, arg->size, arg->value); arg_idx+=1; 
+    }
   }
   //double atime = timer_->GetCurrentTime() - atime_start;
 #if 0
