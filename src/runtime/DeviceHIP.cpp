@@ -404,6 +404,11 @@ int DeviceHIP::KernelSetMem(Kernel* kernel, int idx, int kindex, BaseMem* mem, s
   return IRIS_SUCCESS;
 }
 
+int DeviceHIP::KernelSetLocalMem(size_t lmem) {
+  shared_mem_bytes_ += lmem;
+  return IRIS_SUCCESS;
+}
+
 void DeviceHIP::CheckVendorSpecificKernel(Kernel *kernel) {
   kernel->set_vendor_specific_kernel(devno_, false);
   if (host2hip_ld_->iris_host2hip_kernel_with_obj) {

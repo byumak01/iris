@@ -138,6 +138,28 @@ Command* Command::CreateKernel(Task* task, Kernel* kernel, int dim, size_t* off,
   return cmd;
 }
 
+Command* Command::CreateKernel(Task* task, Kernel* kernel, int dim, size_t* off, size_t* gws, size_t* lws, size_t lmem) {
+  Command* cmd = Create(task, IRIS_CMD_KERNEL);
+  cmd->lmem_ = lmem;
+  cmd->kernel_ = kernel;
+  if (cmd->kernel_args_) delete[] cmd->kernel_args_;
+  cmd->kernel_args_ = kernel->ExportArgs();
+  cmd->kernel_nargs_max_ = kernel->nargs();
+  cmd->kernel_nargs_ = kernel->nargs();
+  cmd->dim_ = dim;
+  for (int i = 0; i < dim; i++) {
+    cmd->off_[i] = off ? off[i] : 0ULL;
+    cmd->gws_[i] = gws[i];
+    cmd->lws_[i] = lws ? lws[i] : 0ULL;
+  }
+  for (int i = dim; i < 3; i++) {
+    cmd->off_[i] = 0;
+    cmd->gws_[i] = 1;
+    cmd->lws_[i] = 1;
+  }
+  return cmd;
+}
+
 Command* Command::CreateKernel(Task* task, Kernel* kernel, int dim, size_t* off, size_t* gws, size_t* lws, int nparams, void** params, size_t* params_off, int* params_info, size_t* memranges) {
   Command* cmd = Create(task, IRIS_CMD_KERNEL);
   cmd->kernel_ = kernel;

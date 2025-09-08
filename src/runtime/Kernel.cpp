@@ -50,7 +50,7 @@ int Kernel::set_order(int *order) {
 
 int Kernel::SetArg(int idx, size_t size, void* value) {
   std::cout << "-----------------------" << std::endl;
-  std::cout << "kernel.cpp:setarg without shared mem logic called " << std::endl;
+  std::cout << "kernel.cpp:setarg without shared mem logic val: " << value << std::endl;
   KernelArg* arg = new KernelArg;
   arg->size = size;
   if (value) memcpy(arg->value, value, size);
@@ -71,7 +71,6 @@ int Kernel::SetSharedMem(int idx, size_t size) {
   arg->off = 0ULL;
   arg->is_shared = true;
   args_[idx] = arg;
-  std::cout << "arg->value: " << arg->value << std::endl;
   return IRIS_SUCCESS;
 }
 
@@ -139,6 +138,7 @@ KernelArg* Kernel::ExportArgs() {
       new_arg->size = arg->size; 
       memcpy(new_arg->value, arg->value, arg->size);
       new_arg->mem = NULL;
+      new_arg->is_shared = arg->is_shared;
       new_arg->off = 0ULL;
     }
   }

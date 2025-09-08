@@ -5,6 +5,7 @@
 #include "Config.h"
 #include "Timer.h"
 #include <map>
+#include <stdexcept>
 
 #ifndef IRIS_ASYNC_STREAMING
 #define IRIS_SYNC_EXECUTION
@@ -81,6 +82,7 @@ public:
   virtual void CheckVendorSpecificKernel(Kernel *kernel) { }
   virtual int KernelSetArg(Kernel* kernel, int idx, int kindex, size_t size, void* value) = 0;
   virtual int KernelSetMem(Kernel* kernel, int idx, int kindex, BaseMem* mem, size_t off) = 0;
+  virtual int KernelSetLocalMem(size_t lmem) { throw std::runtime_error("Not implemented yet."); }
   virtual int KernelLaunch(Kernel* kernel, int dim, size_t* off, size_t* gws, size_t* lws) = 0;
   virtual int Synchronize() = 0;
   virtual int AddCallback(Task* task) = 0;

@@ -145,6 +145,8 @@ void Device::ExecuteKernel(Command* cmd) {
   size_t* gws = cmd->gws();
   //size_t gws0 = gws[0];
   size_t* lws = cmd->lws();
+  size_t  lmem = cmd->lmem();
+  KernelSetLocalMem(lmem);
   //bool reduction = false;
   iris_poly_mem* polymems = cmd->polymems();
   int npolymems = cmd->npolymems();
@@ -199,6 +201,10 @@ void Device::ExecuteKernel(Command* cmd) {
         //set_mem_time += timer_->GetCurrentTime() - set_mem_time_start;
         mem_idx++;
     } else { 
+        /*
+        std::cout << "device.cpp: arg is shared: " << arg->is_shared << std::endl;
+        std::cout << "device.cpp: arg_idx: " << arg_idx << std::endl;
+        std::cout << "device.cpp: idx: " << idx << std::endl;
         if (arg->is_shared){
             std::cout << "else is_shared condition" << std::endl; 
             std::cout << "else cond arg->value" << arg->value << std::endl;
@@ -207,6 +213,8 @@ void Device::ExecuteKernel(Command* cmd) {
         } else {
             KernelSetArg(kernel, arg_idx, idx, arg->size, arg->value);
         }
+        */
+        KernelSetArg(kernel, arg_idx, idx, arg->size, arg->value);
         arg_idx+=1;
     }
   }

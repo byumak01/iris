@@ -60,6 +60,7 @@ public:
   size_t gws(int i) { return gws_[i]; }
   size_t* lws() { return lws_; }
   size_t lws(int i) { return lws_[i]; }
+  size_t lmem() { return lmem_; }
   size_t elem_size() { return elem_size_; }
   Kernel* kernel() { return kernel_; }
   KernelArg* kernel_args() { return kernel_args_; }
@@ -105,6 +106,7 @@ private:
   int type_;
   int src_dev_;
   size_t size_;
+  size_t lmem_ = 0;
   void* host_;
   int *params_map_;
   int dim_;
@@ -142,6 +144,7 @@ public:
   static Command* Create(Task* task, int type);
   static Command* CreateInit(Task* task);
   static Command* CreateKernel(Task* task, Kernel* kernel, int dim, size_t* off, size_t* gws, size_t* lws);
+  static Command* CreateKernel(Task* task, Kernel* kernel, int dim, size_t* off, size_t* gws, size_t* lws, size_t lmem);
   static Command* CreateKernel(Task* task, Kernel* kernel, int dim, size_t* off, size_t* gws, size_t* lws, int nparams, void** params, size_t* params_off, int* params_info, size_t* memranges);
   static Command* CreateKernelPolyMem(Task* task, Command* cmd, size_t* off, size_t* gws, iris_poly_mem* polymems, int npolymems);
   static Command* CreateMalloc(Task* task, Mem* mem);

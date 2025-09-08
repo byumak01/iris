@@ -172,6 +172,10 @@ int iris_task_kernel_object(iris_task task, iris_kernel kernel, int dim, size_t*
   return Platform::GetPlatform()->TaskKernel(task, kernel, dim, off, gws, lws);
 }
 
+int iris_task_kernel_object_lmem(iris_task task, iris_kernel kernel, int dim, size_t* off, size_t* gws, size_t* lws, size_t lmem) {
+  return Platform::GetPlatform()->TaskKernel(task, kernel, dim, off, gws, lws, lmem);
+}
+
 int iris_task_kernel(iris_task task, const char* kernel, int dim, size_t* off, size_t* gws, size_t* lws, int nparams, void** params, int* params_info) {
   return Platform::GetPlatform()->TaskKernel(task, kernel, dim, off, gws, lws, nparams, params, NULL, params_info, NULL);
 }

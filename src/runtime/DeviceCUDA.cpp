@@ -513,11 +513,7 @@ int DeviceCUDA::KernelGet(Kernel *kernel, void** kernel_bin, const char* name, b
 
 int DeviceCUDA::KernelSetArg(Kernel* kernel, int idx, int kindex, size_t size, void* value) {
   std::cout << "-----------------------" << std::endl;
-  std::cout << "device.cpp:kernelsetarg called " << std::endl;
-  std::cout << "idx: " << idx << std::endl;
-  std::cout << "kindex: " << kindex << std::endl;
-  std::cout << "size: " << size << std::endl;
-  std::cout << "value: " << value << std::endl;
+  std::cout << "DeviceCuda.cpp:kernelsetarg, idx: " << idx << "size: " << size << "value: " << value << std::endl;
   if (value) params_[idx] = value;
   else {
     std::cout << "shared mem condition" << std::endl;
@@ -559,6 +555,11 @@ int DeviceCUDA::KernelSetMem(Kernel* kernel, int idx, int kindex, BaseMem* mem, 
       else if (host2cuda_ld_->iris_host2cuda_setmem) 
           host2cuda_ld_->iris_host2cuda_setmem(kindex, dev_ptr);
   }
+  return IRIS_SUCCESS;
+}
+
+int DeviceCUDA::KernelSetLocalMem(size_t lmem) {
+  shared_mem_bytes_ += lmem;
   return IRIS_SUCCESS;
 }
 
@@ -649,8 +650,10 @@ int DeviceCUDA::KernelLaunch(Kernel* kernel, int dim, size_t* off, size_t* gws, 
     }
   }
   _trace("dev[%d][%s] kernel[%s:%s] dim[%d] grid[%d,%d,%d] block[%d,%d,%d] blockoff[%lu,%lu,%lu] max_arg_idx[%d] shared_mem_bytes[%u] q[%d]", devno_, name_, kernel->name(), kernel->get_task_name(), dim, grid[0], grid[1], grid[2], block[0], block[1], block[2], blockOff_x, blockOff_y, blockOff_z, max_arg_idx_, shared_mem_bytes_, q_);
-  std::cout << "shared_mem_bytes_: " << shared_mem_bytes_ << std::endl;
+  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "DeviceCUDA.cpp:ExecuteKernel shared_mem_bytes_: " << shared_mem_bytes_ << std::endl;
 #ifdef IRIS_SYNC_EXECUTION
+  std::cout << "first cond" << std::endl;
   err_ = ld_->cuLaunchKernel(cukernel, grid[0], grid[1], grid[2], block[0], block[1], block[2], shared_mem_bytes_, 0, params_, NULL);
   err_ = ld_->cuStreamSynchronize(0);
 #else

@@ -35,6 +35,7 @@ public:
   int KernelLaunchInit(Kernel* kernel);
   int KernelSetArg(Kernel* kernel, int idx, int kindex, size_t size, void* value);
   int KernelSetMem(Kernel* kernel, int idx, int kindex, BaseMem* mem, size_t off);
+  int KernelSetLocalMem(size_t lmem);
   int KernelLaunch(Kernel* kernel, int dim, size_t* off, size_t* gws, size_t* lws);
   int Synchronize();
   int AddCallback(Task* task);

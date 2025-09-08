@@ -369,6 +369,8 @@ extern int iris_kernel_setarg(iris_kernel kernel, int idx, size_t size, void* va
  */
 extern int iris_kernel_setsmem(iris_kernel kernel, int idx, size_t size);
 
+extern int iris_task_kernel_object_lmem(iris_task task, iris_kernel kernel, int dim, size_t* off, size_t* gws, size_t* lws, size_t lmem);
+
 
 /**@brief Sets memory object as an arguments for a given kernel
  *

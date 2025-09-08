@@ -43,12 +43,10 @@ int main(int argc, char** argv) {
     iris_kernel_setmem(kernel, 1, d_output, iris_rw);
     printf("n: %d\n", n); 
     printf("&n: %p\n", &n); 
-    //iris_kernel_setarg(kernel, 2, sizeof(int), &n);
+    //iris_kernel_setarg(kernel, 2, 2048, NULL);
     
     // Set shared memory (pass NULL as last argument with shared memory size)
     int shared_mem_size = block_size * sizeof(int);
-    iris_kernel_setsmem(kernel, 2, shared_mem_size);
-    
     // Create task
     iris_task task;
     iris_task_create(&task);
@@ -58,7 +56,7 @@ int main(int argc, char** argv) {
     size_t local_work_size = block_size;
     printf("global_work_size: %d \n", global_work_size);
     printf("local_work_size: %d \n", local_work_size);
-    iris_task_kernel_object(task, kernel, 1, NULL, &global_work_size, &local_work_size);
+    iris_task_kernel_object_lmem(task, kernel, 1, NULL, &global_work_size, &local_work_size, 8192);
     
     // Submit task
     iris_task_submit(task, iris_default, NULL, 0);
@@ -79,7 +77,8 @@ int main(int argc, char** argv) {
     for (int i = 0; i < n; i++) {
         printf("Output[%d] = %d\n", i, h_output[i]);
     }
-    printf("Output[0] = %p\n", h_output[0]);
+    printf("Output[0] with p = %p\n", h_output[0]);
+    printf("Output[0] with d = %d\n", h_output[0]);
     
     // Cleanup
     iris_task_release(task);

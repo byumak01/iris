@@ -941,6 +941,16 @@ int Platform::TaskKernel(iris_task brs_task, iris_kernel brs_kernel, int dim, si
   return IRIS_SUCCESS;
 }
 
+int Platform::TaskKernel(iris_task brs_task, iris_kernel brs_kernel, int dim, size_t* off, size_t* gws, size_t* lws, size_t lmem) {
+  Task *task = get_task_object(brs_task);
+  assert(task != NULL);
+  Kernel* kernel = Platform::GetPlatform()->get_kernel_object(brs_kernel);
+  kernel->set_task_name(task->name());
+  Command* cmd = Command::CreateKernel(task, kernel, dim, off, gws, lws, lmem);
+  task->AddCommand(cmd);
+  return IRIS_SUCCESS;
+}
+
 int Platform::TaskCustom(iris_task brs_task, int tag, void* params, size_t params_size) {
   Task *task = get_task_object(brs_task);
   assert(task != NULL);
