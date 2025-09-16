@@ -433,10 +433,6 @@ int iris_kernel_setarg(iris_kernel kernel, int idx, size_t size, void* value) {
   return Platform::GetPlatform()->KernelSetArg(kernel, idx, size, value);
 }
 
-int iris_kernel_setsmem(iris_kernel kernel, int idx, size_t size) {
-  return Platform::GetPlatform()->KernelSharedMem(kernel, idx, size);
-}
-
 int iris_kernel_setmem(iris_kernel kernel, int idx, iris_mem mem, size_t mode) {
   return Platform::GetPlatform()->KernelSetMem(kernel, idx, mem, 0, mode);
 }

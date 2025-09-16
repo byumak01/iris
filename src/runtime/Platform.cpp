@@ -874,12 +874,6 @@ int Platform::KernelSetArg(iris_kernel brs_kernel, int idx, size_t size, void* v
   return IRIS_SUCCESS;
 }
 
-int Platform::KernelSharedMem(iris_kernel brs_kernel, int idx, size_t size) {
-  Kernel* kernel = Platform::GetPlatform()->get_kernel_object(brs_kernel);
-  kernel->SetSharedMem(idx, size);
-  return IRIS_SUCCESS;
-}
-
 int Platform::KernelSetMem(iris_kernel brs_kernel, int idx, iris_mem brs_mem, size_t off, size_t mode) {
   Kernel* kernel = Platform::GetPlatform()->get_kernel_object(brs_kernel);
   BaseMem* mem = Platform::GetPlatform()->get_mem_object(brs_mem);

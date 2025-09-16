@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     size_t local_work_size = block_size;
     printf("global_work_size: %d \n", global_work_size);
     printf("local_work_size: %d \n", local_work_size);
-    iris_task_kernel_object_lmem(task, kernel, 1, NULL, &global_work_size, &local_work_size, 8192);
+    iris_task_kernel_object_lmem(task, kernel, 1, NULL, &global_work_size, &local_work_size, 8192*2);
     
     // Submit task
     iris_task_submit(task, iris_default, NULL, 0);
