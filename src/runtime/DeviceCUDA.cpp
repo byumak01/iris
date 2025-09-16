@@ -512,25 +512,19 @@ int DeviceCUDA::KernelGet(Kernel *kernel, void** kernel_bin, const char* name, b
 }
 
 int DeviceCUDA::KernelSetArg(Kernel* kernel, int idx, int kindex, size_t size, void* value) {
-  std::cout << "-----------------------" << std::endl;
-  std::cout << "DeviceCuda.cpp:kernelsetarg, idx: " << idx << "size: " << size << "value: " << value << std::endl;
   if (value) params_[idx] = value;
   else {
-    std::cout << "shared mem condition" << std::endl;
     shared_mem_offs_[idx] = shared_mem_bytes_;
     params_[idx] = shared_mem_offs_ + idx;
     shared_mem_bytes_ += size;
   }
   if (max_arg_idx_ < idx) max_arg_idx_ = idx;
   if (kernel->is_vendor_specific_kernel(devno_)) {
-     std::cout << "first if statement" << std::endl;
      if (host2cuda_ld_->iris_host2cuda_setarg_with_obj){
          host2cuda_ld_->iris_host2cuda_setarg_with_obj(
                 kernel->GetParamWrapperMemory(), kindex, size, value);
-                std::cout << "second if statement" << std::endl;}
      else if (host2cuda_ld_->iris_host2cuda_setarg){
          host2cuda_ld_->iris_host2cuda_setarg(kindex, size, value);
-         std::cout << "third if statement" << std::endl;
         }
   }
   return IRIS_SUCCESS;
