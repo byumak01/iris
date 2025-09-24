@@ -26,7 +26,6 @@ typedef struct _KernelArg {
   size_t mem_size;
   size_t off;
   int mode;
-  bool is_shared = false;
 } KernelArg;
 
 class Kernel: public Retainable<struct _iris_kernel, Kernel> {

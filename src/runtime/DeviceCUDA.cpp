@@ -523,10 +523,11 @@ int DeviceCUDA::KernelSetArg(Kernel* kernel, int idx, int kindex, size_t size, v
      if (host2cuda_ld_->iris_host2cuda_setarg_with_obj){
          host2cuda_ld_->iris_host2cuda_setarg_with_obj(
                 kernel->GetParamWrapperMemory(), kindex, size, value);
+    }
      else if (host2cuda_ld_->iris_host2cuda_setarg){
          host2cuda_ld_->iris_host2cuda_setarg(kindex, size, value);
         }
-  }
+    }
   return IRIS_SUCCESS;
 }
 

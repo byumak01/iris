@@ -122,7 +122,6 @@ KernelArg* Kernel::ExportArgs() {
       new_arg->size = arg->size; 
       memcpy(new_arg->value, arg->value, arg->size);
       new_arg->mem = NULL;
-      new_arg->is_shared = arg->is_shared;
       new_arg->off = 0ULL;
     }
   }
